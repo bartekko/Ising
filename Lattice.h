@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "2Draw.h"
+
+#include <iostream>
 class Lattice
 {
 public:
@@ -42,7 +44,9 @@ public:
 	}
 		
 	double switch_probability(int x, int y,double Temp)
-	{	auto ans=exp(-2*test(x,y)*(sum_of_nn_spins(x,y))/Temp);
+	{	auto m=double(-2*test(x,y)*(sum_of_nn_spins(x,y)))/Temp;
+		//std::cerr<<m<<'\n';
+		double ans=exp(m);
 		return ans>1?1:ans;
 	}
 	void Draw()

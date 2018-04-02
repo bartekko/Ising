@@ -3,13 +3,15 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
+//typedef std::vector<std::pair<int,int>> pointList;
+
 class Draw2D
 {
 public:
-	Draw2D(int size_x=500, int size_y=500)
+	Draw2D(int windowSize=500)
 	{	SDL_Init(SDL_INIT_VIDEO);
-		win= SDL_CreateWindow("Visor",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,size_x,size_y,0);
-		ren=SDL_CreateRenderer(win,-1,0);
+		win= SDL_CreateWindow("Visor",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,windowSize,windowSize,0);
+		ren=SDL_CreateRenderer(win,-1,0);	
 	}
 	void FullDraw(std::vector<char> points,int sidelength)
 	{	SDL_SetRenderDrawColor(ren,0,0,0,255);

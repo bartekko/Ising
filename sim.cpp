@@ -10,11 +10,9 @@
 
 #include "Lattice.h"
 
+#include <chrono>
 
 using namespace std;
-
-
-
 
 int main(int argc, char** argv)
 {
@@ -26,7 +24,7 @@ int main(int argc, char** argv)
 	}		
 
 	int lattice_size=atol(argv[1]);
-	int temp=atof(argv[2]);	
+	double temp=atof(argv[2]);	
 	int steps=atol(argv[3]);
 	boost::random::mt19937 rng(atoi(argv[4]));
 	cerr<<"Set parameters"<<endl;
@@ -36,13 +34,17 @@ int main(int argc, char** argv)
 	for(int i=0;i<lat.length1D();i++)
 	{	if(boolean(rng))
 		{	lat.flip(i);
+			
 		}
 	}
 	cerr<<"Created Lattice"<<endl;
-
+	
+		
 	boost::random::uniform_real_distribution<> real(0,1);
 	for(int mcs=0; mcs<steps;mcs++)
-	{	for(int i=0;i<lattice_size;i++)
+	{	
+		auto t0=chrono::system_clock::now();
+		for(int i=0;i<lattice_size;i++)
 		{
 			for(int j=0;j<lattice_size;j++)
 			{   
@@ -54,8 +56,12 @@ int main(int argc, char** argv)
 			}
 				
 		}
+		auto t1=chrono::system_clock::now();	
 		lat.Draw();
-//		usleep(50000);
+		auto t2=chrono::system_clock::now();
+		cout<<"Simulation time: "<<((chrono::duration_cast<chrono::milliseconds>(t1-t0)).count())<<"ms\n";
+		cout<<"Draw Time: "<<((chrono::duration_cast<chrono::milliseconds>(t2-t1)).count())<<"ms\n";
+	
 	}
 		
 }
