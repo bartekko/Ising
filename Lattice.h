@@ -1,86 +1,62 @@
-typedef int Direction;
-
-class Point
-{
-public:
-	Point(int _x,int _y){x=_x;y=_y;}
-	Point shift(Direction dir)
-	{
-		Point ans=*this;
-		switch(dir)
-		{
-			case 0:
-				ans.y++;
-				break; 
-			case 1:
- 				ans.y--;
-				break;	
-			case 2:
- 				ans.x--;
-				break;
-			case 3:
-  				ans.x++;
-				break;
-		}
-		return ans;
-	};			
-int x,y;
-};
-
-
-
-
+#pragma once
+#include <vector>
+#include "2Draw.h"
 class Lattice
 {
 public:
-	Lattice(int L)
+	Lattice(int L):visor()
 	{	l=L;
-		stor.resize(L*L); 
-		boost::random::uniform_int_distribution<> boolean(0,1);
-		for(auto& it:stor)
-		{
-			it=boolean(rng);
-		}
+		stor.resize(L*L,0); 		
 	};
-	
-	char& at(Point p) 
-	{	while(p.x<0) p.x+=l;
-		while(p.x>=l) p.x-=l;
-		while(p.y<0) p.y+=l;
-		while(p.y>=l) p.y-=l;
-		auto n=p.x*l+p.y;
-		return stor[n];
+	 
+	bool test(int x,int y) 
+	{	
+		return stor[to_pos(x,y)];
 	};
-	int sum_of_nn_spins(Point p)
+	bool test(int n)
 	{
-
-		int c=at(p.shift(0))+at(p.shift(1))+at(p.shift(2))+at(p.shift(3));
+		return stor[n];
+	} 
+	
+	void flip(int x,int y)  
+	{	int n=to_pos(x,y);
+		stor[n]=!stor[n];
+	};
+	void flip(int n)
+	{
+		stor[n]=!stor[n];
+	}
+	
+	int to_pos(int x,int y)
+	{	while(x<0) x+=l;
+		while(x>=l) x-=l;
+		while(y<0) y+=l;
+		while(y>=l) y-=l;
+		return x*l+y;
+	}
+	
+	int sum_of_nn_spins(int x,int y)
+	{	int c=test(x+1,y)+test(x-1,y)+test(x,y+1)+test(x,y-1);
 		c*=2;
 		return c-4;
 	}
-	std::vector<std::vector<int>> print()
-	{
-		std::vector<std::vector<int> > img;
-		for(int i=0;i<l;i++)
-		{
-			std::vector<int> row;
-			for(int j=0; j<l; j++)
-				row.push_back(at(Point(i,j)));
-			img.push_back(row);
-		}
 		
-		return img;
-	}
-	
-	 
-	double switch_probability(Point p,double Temp)
-	{
-
-		auto ans=exp(-2*at(p)*(sum_of_nn_spins(p))/Temp);
+	double switch_probability(int x, int y,double Temp)
+	{	auto ans=exp(-2*test(x,y)*(sum_of_nn_spins(x,y))/Temp);
 		return ans>1?1:ans;
 	}
-private:
+	void Draw()
+	{
+		visor.FullDraw(stor,l);
+	}
+	
+	int length1D(){return l*l;}
+	int sideLength(){return l;}
+//private:
+	Draw2D visor;
 	std::vector<char> stor;
 	int l;
 };
+
+
 

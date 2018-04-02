@@ -8,12 +8,13 @@
 #include <string>
 #include <algorithm>
 
+#include "Lattice.h"
 
 
 using namespace std;
-boost::random::mt19937 rng(1093710);
 
-#include "Lattice.h"
+
+
 
 int main(int argc, char** argv)
 {
@@ -27,27 +28,34 @@ int main(int argc, char** argv)
 	int lattice_size=atol(argv[1]);
 	int temp=atof(argv[2]);	
 	int steps=atol(argv[3]);
-	
-	rng.seed(atoi(argv[4]));
-	
+	boost::random::mt19937 rng(atoi(argv[4]));
+	cerr<<"Set parameters"<<endl;
+
 	Lattice lat(lattice_size);
-	boost::random::uniform_int_distribution<> real(0,1);
+	boost::random::uniform_int_distribution<> boolean(0,1);
+	for(int i=0;i<lat.length1D();i++)
+	{	if(boolean(rng))
+		{	lat.flip(i);
+		}
+	}
 	cerr<<"Created Lattice"<<endl;
-	
+
+	boost::random::uniform_real_distribution<> real(0,1);
 	for(int mcs=0; mcs<steps;mcs++)
 	{	for(int i=0;i<lattice_size;i++)
 		{
 			for(int j=0;j<lattice_size;j++)
 			{   
-				if(real(rng)<lat.switch_probability(Point(i,j),temp))
+				if(real(rng)<lat.switch_probability(i,j,temp))
 				{
-					lat.at(Point(i,j))=!lat.at(Point(i,j));
+					lat.flip(i,j);
 				}
 		
 			}
 				
 		}
-	
+		lat.Draw();
+//		usleep(50000);
 	}
 		
 }
