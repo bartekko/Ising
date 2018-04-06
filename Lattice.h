@@ -45,7 +45,7 @@ public:
 	}
 		
 	double switch_probability(int x, int y,double Temp)
-	{	auto m=-1*(double(spin(x,y)*(sum_of_nn_spins(x,y)))/Temp);
+	{	auto m=-2*(double(spin(x,y)*(sum_of_nn_spins(x,y)))/Temp);
 		//std::cerr<<m<<'\n';
 		double ans=exp(m);
 		

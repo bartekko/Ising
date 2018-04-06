@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+
 #include <vector>
 
 #ifdef VISOR_ENABLE
-
+#include <SDL2/SDL.h>
 
 //typedef std::vector<std::pair<int,int>> pointList;
 
@@ -52,7 +52,8 @@ class Draw2D
 public:
 	Draw2D(int windowSize=500){}
 	void FullDraw(std::vector<char> points,int sidelength){}
-	~Draw2D(){}
+	~Draw2D(){
+	}
 };
 
 
