@@ -11,22 +11,22 @@ public:
 		stor.resize(L*L,0); 		
 	};
 	 
-	bool test(int x,int y) 
+	char spin(int x,int y) 
 	{	
 		return stor[to_pos(x,y)];
 	};
-	bool test(int n)
+	char spin(int n)
 	{
 		return stor[n];
 	} 
 	
 	void flip(int x,int y)  
 	{	int n=to_pos(x,y);
-		stor[n]=!stor[n];
+		stor[n]=stor[n]<=0?1:-1;
 	};
 	void flip(int n)
 	{
-		stor[n]=!stor[n];
+		stor[n]=stor[n]<=0?1:-1;
 	}
 	
 	int to_pos(int x,int y)
@@ -38,15 +38,17 @@ public:
 	}
 	
 	int sum_of_nn_spins(int x,int y)
-	{	int c=test(x+1,y)+test(x-1,y)+test(x,y+1)+test(x,y-1);
-		c*=2;
-		return c-4;
+	{	
+		int c=spin(x+1,y)+spin(x-1,y)+spin(x,y+1)+spin(x,y-1);
+		
+		return c;
 	}
 		
 	double switch_probability(int x, int y,double Temp)
-	{	auto m=double(-2*test(x,y)*(sum_of_nn_spins(x,y)))/Temp;
+	{	auto m=-1*(double(spin(x,y)*(sum_of_nn_spins(x,y)))/Temp);
 		//std::cerr<<m<<'\n';
 		double ans=exp(m);
+		
 		return ans>1?1:ans;
 	}
 	void Draw()
@@ -61,6 +63,3 @@ public:
 	std::vector<char> stor;
 	int l;
 };
-
-
-
