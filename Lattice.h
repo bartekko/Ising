@@ -6,9 +6,10 @@
 class Lattice
 {
 public:
-	Lattice(int L):visor()
+	Lattice(int L, double T):visor()
 	{	l=L;
 		stor.resize(L*L,0); 		
+		Temp=T;
 	};
 	 
 	char spin(int x,int y) 
@@ -44,7 +45,7 @@ public:
 		return c;
 	}
 		
-	double switch_probability(int x, int y,double Temp)
+	double switch_probability(int x, int y)
 	{	auto m=-2*(double(spin(x,y)*(sum_of_nn_spins(x,y)))/Temp);
 		//std::cerr<<m<<'\n';
 		double ans=exp(m);
@@ -62,4 +63,5 @@ public:
 	Draw2D visor;
 	std::vector<char> stor;
 	int l;
+	double Temp;
 };
