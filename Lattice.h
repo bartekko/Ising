@@ -8,6 +8,7 @@ class Lattice
 public:
 	Lattice(int L, double T):visor()
 	{	l=L;
+		l2=L*L;
 		stor.resize(L*L,0); 		
 		Temp=T;
 		initialize_switch_probability();
@@ -17,9 +18,11 @@ public:
 	{	
 		return stor[to_pos(x,y)];
 	};
-	bool is_upspin(int x,int y) 
+	bool is_upspin(int n) 
 	{	
-		return stor[to_pos(x,y)]==1;
+		if(n<0) n+=l2;
+		if(n>l2) n-=l2;
+		return stor[n]==1;
 	};
 	char spin(int n)
 	{
@@ -43,16 +46,19 @@ public:
 		return x*l+y;
 	}
 	
-	int nn_upspin_count(int x,int y)
+	int nn_upspin_count(int n)
 	{	
-		int c=is_upspin(x-1,y)+is_upspin(x+1,y)+is_upspin(x,y-1)+is_upspin(x,y+1);
+		int c=is_upspin(n-1)+is_upspin(n+1)+is_upspin(n-l)+is_upspin(n+l);
 		
 		return c;
 	}
 		
-	double switch_probability(int x, int y)
-	{	return prob[is_upspin(x,y)][nn_upspin_count(x,y)];
+	double switch_probability(int n)
+	{	return prob[is_upspin(n)][nn_upspin_count(n)];
 	}
+	
+	
+	
 	void initialize_switch_probability()
 	{	
 		for(int i=0;i<2;i++)
@@ -73,12 +79,13 @@ public:
 		visor.FullDraw(stor,l);
 	}
 	
-	int length1D(){return l*l;}
+	int length() const {return stor.size();}
 	int sideLength(){return l;}
 //private:
 	Draw2D visor;
 	std::vector<char> stor;
 	int l;
+	int l2;
 	double Temp;
 	double prob[2][5];
 };
