@@ -10,11 +10,16 @@ public:
 	{	l=L;
 		stor.resize(L*L,0); 		
 		Temp=T;
+		initialize_switch_probability();
 	};
 	 
 	char spin(int x,int y) 
 	{	
 		return stor[to_pos(x,y)];
+	};
+	bool is_upspin(int x,int y) 
+	{	
+		return stor[to_pos(x,y)]==1;
 	};
 	char spin(int n)
 	{
@@ -38,20 +43,31 @@ public:
 		return x*l+y;
 	}
 	
-	int sum_of_nn_spins(int x,int y)
+	int nn_upspin_count(int x,int y)
 	{	
-		int c=spin(x+1,y)+spin(x-1,y)+spin(x,y+1)+spin(x,y-1);
+		int c=is_upspin(x-1,y)+is_upspin(x+1,y)+is_upspin(x,y-1)+is_upspin(x,y+1);
 		
 		return c;
 	}
 		
 	double switch_probability(int x, int y)
-	{	auto m=-2*(double(spin(x,y)*(sum_of_nn_spins(x,y)))/Temp);
-		//std::cerr<<m<<'\n';
-		double ans=exp(m);
-		
-		return ans>1?1:ans;
+	{	return prob[is_upspin(x,y)][nn_upspin_count(x,y)];
 	}
+	void initialize_switch_probability()
+	{	
+		for(int i=0;i<2;i++)
+		{
+			for(int j=0;j<5;j++)
+			{
+				auto dE=-2*(-1+2*i)*(-4+2*j);
+				auto ans=exp(dE/Temp);
+				prob[i][j]=ans>1?1:ans;
+			}
+		}
+	}
+
+
+
 	void Draw()
 	{
 		visor.FullDraw(stor,l);
@@ -64,4 +80,5 @@ public:
 	std::vector<char> stor;
 	int l;
 	double Temp;
+	double prob[2][5];
 };
