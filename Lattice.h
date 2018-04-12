@@ -14,46 +14,31 @@ public:
 		initialize_switch_probability();
 	};
 	 
-	char spin(int x,int y) 
-	{	
-		return stor[to_pos(x,y)];
-	};
-	bool is_upspin(int n) 
+	inline bool is_upspin(int n) const
 	{	
 		if(n<0) n+=l2;
 		if(n>l2) n-=l2;
 		return stor[n]==1;
 	};
-	char spin(int n)
-	{
+	inline char spin(int n) const
+	{	while(n>l2)
+		{n-=l2;}
 		return stor[n];
 	} 
 	
-	void flip(int x,int y)  
-	{	int n=to_pos(x,y);
-		stor[n]=stor[n]<=0?1:-1;
-	};
-	void flip(int n)
+
+	inline void flip(int n)
 	{
 		stor[n]=stor[n]<=0?1:-1;
 	}
 	
-	int to_pos(int x,int y)
-	{	while(x<0) x+=l;
-		while(x>=l) x-=l;
-		while(y<0) y+=l;
-		while(y>=l) y-=l;
-		return x*l+y;
-	}
-	
-	int nn_upspin_count(int n)
+	int nn_upspin_count(int n) const
 	{	
-		int c=is_upspin(n-1)+is_upspin(n+1)+is_upspin(n-l)+is_upspin(n+l);
-		
+		int c=is_upspin(n-1)+is_upspin(n+1)+is_upspin(n-l)+is_upspin(n+l);	
 		return c;
 	}
 		
-	double switch_probability(int n)
+	double switch_probability(int n) const
 	{	return prob[is_upspin(n)][nn_upspin_count(n)];
 	}
 	
