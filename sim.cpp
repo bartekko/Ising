@@ -1,5 +1,6 @@
-#define VISOR_ENABLE
-#define RANDOMIZED_LATTICE_FLIPPING
+//#define VISOR_ENABLE
+//#define RANDOMIZED_LATTICE_FLIPPING
+//#define PERF_STATS
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -19,9 +20,9 @@
 using namespace std;
 
 int main(int argc, char** argv)
-{	if(argc <5 ||argc >6)
+{	if(argc != 6)
 	{
-		std::cout<<"Usage:"<<argv[0]<<" <Lattice size> <Reduced Temperature> <Steps count> <rng seed>"<<std::endl;
+		cerr<<"Usage:"<<argv[0]<<" <Lattice size> <Reduced Temperature> <Steps count> <rng seed> <Analysis interval>"<<std::endl;
 		exit(-1);
 	}		
 
@@ -29,6 +30,7 @@ int main(int argc, char** argv)
 	double temp=atof(argv[2]);	
 	int steps=atol(argv[3]);
 	boost::random::mt19937 rng(atoi(argv[4]));
+	auto interval=atoi(argv[5]);
 	cerr<<"Set parameters"<<endl;
 	
 	
@@ -43,7 +45,7 @@ int main(int argc, char** argv)
 			
 		}else lat.stor[i]=-1;
 	}
-	cerr<<"Created Lattice"<<endl;
+	cerr<<"Created Lattice "<<endl;
 	
 	auto latlen=lat.length();
 	boost::random::uniform_real_distribution<> real(0,1);
@@ -67,10 +69,12 @@ int main(int argc, char** argv)
 		//Draw everything
 		lat.Draw();
 		auto t2=chrono::system_clock::now();
-		cout<<hamiltonian(lat)<<' '<<magnetization(lat)<<'\n';			
+		if(mcs%interval==0)cout<<hamiltonian(lat)<<' '<<magnetization(lat)<<'\n';			
 		auto t3=chrono::system_clock::now();
+#ifdef PERF_STATS
 		cerr<<"Simulation time: "<<((chrono::duration_cast<chrono::milliseconds>(t1-t0)).count())<<"ms\n";
 		cerr<<"Draw Time: "<<((chrono::duration_cast<chrono::milliseconds>(t2-t1)).count())<<"ms\n";		
 		cerr<<"Analysis Time: "<<((chrono::duration_cast<chrono::milliseconds>(t3-t2)).count())<<"ms\n";
+#endif
 	}		
 }
